@@ -18,7 +18,6 @@ defineProps<{
     // Defining types as an array of strings
     types: string[]
 }>()
-
 </script>
 
 <style scoped></style>

@@ -1,52 +1,50 @@
 <template>
-    <TrainerForm />
-    <PokemonCard :image="pokemon.image" :name="pokemon.name" :types="pokemon.types" />
-    <!-- v-on directive calling @random from RandomButton.vue -->
-    <RandomButton @random="randomPokemon" />
+    <div class="">
+        <div class="mx-auto max-w-4xl p-8">
+            <div class="bg-stone-50 rounded-xl shadow-md p-6">
+                <h1 class="text-3xl font-bold mb-4">Selecciona tu Pokemon</h1>
+                <PokemonCard :image="pokemon.image" :name="pokemon.name" :types="pokemon.types" />
+
+                <!-- v-on directive calling @random from RandomButton.vue -->
+                <RandomButton @random="randomPokemon" />
+
+                <!-- Conditional rendering for loading and error states -->
+                <p v-if="loading">Cargando...</p>
+                <p v-else-if="error">{{ error }}</p>
+            </div>
+
+            <h1 class="text-3xl font-bold mb-4">Formulario para entrenadores</h1>
+
+            <TrainerForm :pokemon-name="pokemon.name" @save="saveTrainer" />
+
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
 // Importing ref for reactive variables and onMounted
-import { ref, onMounted } from 'vue';
+import { onMounted } from 'vue'
 
 // Importing components
 import TrainerForm from './components/TrainerForm.vue';
 import PokemonCard from './components/PokemonCard.vue';
 import RandomButton from './components/RandomButton.vue';
-import type { PokemonResponse } from './interfaces/pokemon'
 
-// Importing axios function for API calls
-import axios from 'axios';
+// Importing Pokemon composable
+import { usePokemon } from './composables/usePokemon';
 
-// Pokemon reactive variable to save image, name and types into PokemonCard
-const pokemon = ref({
-    image: '',
-    name: '',
-    types: [] as string[]
-})
+import type { Trainer } from './interfaces/trainer'
 
-// Importing API_URL from .env
-const API_URL = import.meta.env.VITE_API_URL
+// Using the usePokemon composable to manage state and logic related to Pokemon
+const {
+    pokemon,
+    loading,
+    error,
+    randomPokemon
+} = usePokemon()
 
-// Axios function for getPokemon()
-async function getPokemon(id: number) {
-    // axios API call through the PokemonResponse interface and the API_URL + id
-    const response = await axios.get<PokemonResponse>(`${API_URL}/${id}`)
-
-    // Taking the image and name from the response and saving it into the pokemon reactive variable
-    pokemon.value.image = response.data.sprites.front_default
-    pokemon.value.name = response.data.name
-
-    // Mapping the types from the response and saving it into the pokemon reactive variable
-    const types = response.data.types.map(pokemonType => pokemonType.type.name)
-    pokemon.value.types = types
-}
-
-// Function to get a random pokemon Id 
-async function randomPokemon() {
-    const randomId = Math.floor(Math.random() * 1025) + 1
-    await getPokemon(randomId)
-
+function saveTrainer(trainer: Trainer) {
+    console.log('Entrenador guardado:', trainer);
 }
 
 // When the component is mounted, it will execute randomPokemon()
