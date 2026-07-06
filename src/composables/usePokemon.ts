@@ -19,6 +19,11 @@ export function usePokemon() {
     // Importing API_URL from .env
     const API_URL = import.meta.env.VITE_API_URL
 
+    // axios create
+    const api = axios.create({
+        baseURL: API_URL,
+    })
+
     // Axios function for getPokemon()
     async function getPokemon(id: number) {
         // Resetting error and loading to true
@@ -26,16 +31,8 @@ export function usePokemon() {
         loading.value = true
 
         try {
-            // 2 seconds delay to simulate a loading state
-            await new Promise(resolve => setTimeout(resolve, 1000))
-
-            // axios create
-            const api = axios.create({
-                baseURL: API_URL,
-            })
-
             // axios API call through the PokemonResponse interface and the API_URL + id
-            const { data } = await api.get<PokemonResponse>(`${API_URL}/${id}`)
+            const { data } = await api.get<PokemonResponse>(`/${id}`)
 
             // Taking the image and name from the response and saving it into the pokemon reactive variable
             pokemon.value.image = data.sprites.front_default
