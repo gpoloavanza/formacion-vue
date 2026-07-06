@@ -1,45 +1,25 @@
 <template>
-    <form @submit.prevent="saveTrainer">
-            <BaseInput 
-                id="name" 
-                label="Nombre"
-                placeholder="Ash" 
-                v-model="trainer.name" 
-                required
-            />
-            
-            <BaseInput
-                id="surname"
-                label="Apellidos"
-                placeholder="Ketchum"
-                v-model="trainer.surname" 
-                required
-            />
+    <div>
+        <form @submit.prevent="saveTrainer" class="space-y-5">
+            <BaseInput id="name" label="Nombre" placeholder="Ash" v-model="trainer.name" required />
 
-            <BaseInput
-                id="dni"
-                label="DNI"
-                placeholder="12345678A"
-                v-model="trainer.dni"
-                required
-            />
-            
-            <BaseInput
-                id="email"
-                label="Email"
-                placeholder="ash@trainer.com"
-                v-model="trainer.email" 
-                required
-            />
-            
-            <BaseInput
-                id="assigned-pokemon"
-                label="Pokemon asignado"
-                :value="pokemonName"
-                readonly />
+            <BaseInput id="surname" label="Apellidos" placeholder="Ketchum" v-model="trainer.surname" required />
 
-            <button type="submit">Guardar</button>
-    </form>
+            <BaseInput id="dni" label="DNI" placeholder="12345678A" v-model="trainer.dni" required />
+
+            <BaseInput id="email" label="Email" placeholder="ash@trainer.com" v-model="trainer.email" required />
+
+            <BaseDisplayField id="assigned-pokemon" label="Pokemon asignado" :value="pokemonName" />
+
+            <div class="pt-3">
+                <BaseButton type="submit">
+                    Guardar entrenador
+                </BaseButton>
+            </div>
+
+
+        </form>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -47,6 +27,8 @@ import type { Trainer } from '../interfaces/trainer'
 
 import { ref } from 'vue'
 import BaseInput from './BaseInput.vue';
+import BaseDisplayField from './BaseDisplayField.vue';
+import BaseButton from './BaseButton.vue';
 
 const props = defineProps<{
     pokemonName: string
@@ -70,10 +52,10 @@ function saveTrainer() {
     }
 
     if (
-    !trainer.value.name ||
-    !trainer.value.surname ||
-    !trainer.value.dni ||
-    !trainer.value.email
+        !trainer.value.name ||
+        !trainer.value.surname ||
+        !trainer.value.dni ||
+        !trainer.value.email
     ) {
         return
     }

@@ -1,27 +1,29 @@
 <template>
-    <div class="">
-        <div class="mx-auto max-w-4xl p-8">
-            <div class="bg-stone-200 rounded-xl shadow-md p-6 mb-10 mt-5">
-                <h1 class="text-3xl font-bold mb-6">Selecciona tu Pokemon</h1>
-                <PokemonCard :image="pokemon.image" :name="pokemon.name" :types="pokemon.types" />
+    <div class="mx-auto flex max-w-5xl flex-col gap-2 p-8">
+        <BaseCard>
+            <h1 class="text-3xl font-bold mb-6">Selecciona tu Pokemon</h1>
 
-                <!-- v-on directive calling @random from RandomButton.vue -->
-                <div class="flex justify-center mt-4 ">
-                    <RandomButton @random="randomPokemon" class="w-full rounded-2xl bg-purple-600 p-4 shadow-md text-white hover:bg-purple-700 hover:shadow-lg transition duration-300 cursor-pointer"/>
-                </div>
-                
+            <div v-if="loading" class="flex h-99 items-center justify-center">
+                <span class="h-8 w-8 animate-spin rounded-full border-4 border-stone-300 border-t-purple-600"></span>
+            </div>
+            <PokemonCard v-else :image="pokemon.image" :name="pokemon.name" :types="pokemon.types" />
 
-                <!-- Conditional rendering for loading and error states -->
-                <p v-if="loading">Cargando...</p>
-                <p v-else-if="error">{{ error }}</p>
+
+            <!-- v-on directive calling @random from RandomButton.vue -->
+            <div class="flex justify-center pt-8">
+                <RandomButton :is-loading="loading" @random="randomPokemon" />
             </div>
 
-            <div class="bg-stone-200 rounded-xl shadow-md p-6 mb-10 mt-5">
-                <h1 class="text-3xl font-bold mb-6">Formulario para entrenadores</h1>
 
-                <TrainerForm :pokemon-name="pokemon.name" @save="saveTrainer" />
-            </div>
-        </div>
+            <!-- Conditional rendering for loading and error states -->
+            <p v-if="error" class="text-red-600 text-center text-sm mt-2">{{ error }}</p>
+        </BaseCard>
+
+        <BaseCard>
+            <h1 class="text-3xl font-bold mb-6">Formulario para entrenadores</h1>
+
+            <TrainerForm :pokemon-name="pokemon.name" @save="saveTrainer" />
+        </BaseCard>
     </div>
 </template>
 
@@ -38,6 +40,7 @@ import RandomButton from './components/RandomButton.vue';
 import { usePokemon } from './composables/usePokemon';
 
 import type { Trainer } from './interfaces/trainer'
+import BaseCard from './components/BaseCard.vue';
 
 // Using the usePokemon composable to manage state and logic related to Pokemon
 const {
