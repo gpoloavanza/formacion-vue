@@ -1,5 +1,5 @@
 <template>
-    <button v-bind="attrs" :disabled="props.disabled"
+    <button :disabled="props.disabled"
         :class="['w-full rounded-2xl p-4 shadow-md text-white hover:shadow-lg transition duration-300 cursor-pointer',
             props.disabled ? 'bg-stone-400 cursor-not-allowed' : ['hover:shadow-lg cursor-pointer', variantClasses[props.variant]]]">
 
@@ -8,9 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import { useAttrs } from 'vue'
-const attrs = useAttrs()
-
 // Defining the type for the button variant
 type ButtonVariant = 'primary' | 'secondary' | 'danger'
 

@@ -12,16 +12,16 @@
             <div class="flex justify-end">
                 <ul class="flex gap-3">
 
-                    <li v-for="type in types" :key="type"
-                        :class="getTypeClass(type) + ' px-3 py-1 rounded-full text-sm font-semibold'">
-                        {{ type.charAt(0).toUpperCase() + type.slice(1) }}
+                    <li v-for="type in formattedTypes" :key="type.name"
+                        :class="type.class + ' px-3 py-1 rounded-full text-sm font-semibold'">
+                        {{ type.label }}
                     </li>
                 </ul>
             </div>
 
             <!-- Pokemon name -->
             <div class="text-3xl font-bold text-center">
-                <h2>{{ name.charAt(0).toUpperCase() + name.slice(1) }}</h2>
+                <h2>{{ formattedName }}</h2>
             </div>
         </div>
     </div>
@@ -29,14 +29,26 @@
 
 <script setup lang="ts">
 import { getTypeClass } from '../utils/pokemonTypeColors'
+import { computed } from 'vue'
 
 // Receiving Props from the father App.vue
-defineProps<{
+const props = defineProps<{
     image: string
     name: string
     // Defining types as an array of strings
     types: string[]
 }>()
+
+const formattedTypes = computed(() =>
+    props.types.map(type => ({
+        name: type,
+        label: type.charAt(0).toUpperCase() + type.slice(1),
+        class: getTypeClass(type)
+    }))
+) 
+
+const formattedName = computed(() => 
+    props.name.charAt(0).toUpperCase() + props.name.slice(1))
 </script>
 
 <style scoped></style>
