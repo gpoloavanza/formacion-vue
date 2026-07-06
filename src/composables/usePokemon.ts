@@ -26,6 +26,9 @@ export function usePokemon() {
         loading.value = true
 
         try {
+            // 2 seconds delay to simulate a loading state
+            await new Promise(resolve => setTimeout(resolve, 1000))
+
             // axios create
             const api = axios.create({
                 baseURL: API_URL,
