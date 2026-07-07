@@ -3,10 +3,16 @@
         <BaseCard>
             <h1 class="text-3xl font-bold mb-6">Selecciona tu Pokemon</h1>
 
-            <div v-if="loading" class="flex h-99 items-center justify-center">
-                <span class="h-8 w-8 animate-spin rounded-full border-4 border-stone-300 border-t-purple-600"></span>
+            <div class="relative">
+                <PokemonCard :image="pokemon.image" :name="pokemon.name" :types="pokemon.types" />
+
+                <div v-if="loading"
+                    class="absolute inset-0 flex items-center justify-center rounded-xl bg-white/50 backdrop-blur-sm">
+                    <span
+                        class="h-8 w-8 animate-spin rounded-full border-4 border-stone-300 border-t-purple-600"></span>
+                </div>
             </div>
-            <PokemonCard v-else :image="pokemon.image" :name="pokemon.name" :types="pokemon.types" />
+
 
 
             <!-- v-on directive calling @random from RandomButton.vue -->

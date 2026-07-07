@@ -31,11 +31,14 @@ export function usePokemon() {
         loading.value = true
 
         try {
+
             // axios API call through the PokemonResponse interface and the API_URL + id
             const { data } = await api.get<PokemonResponse>(`/${id}`)
 
             // Taking the image and name from the response and saving it into the pokemon reactive variable
             pokemon.value.image = data.sprites.front_default
+            ?? data.sprites.other?.['official-artwork']?.front_default
+            ?? ''
             pokemon.value.name = data.name
 
             // Mapping the types from the response and saving it into the pokemon reactive variable
@@ -49,16 +52,22 @@ export function usePokemon() {
 
             // Turning off the loading state
         } finally {
+            await new Promise<void>(resolve => setTimeout(resolve, 500))
             loading.value = false
         }
     }
 
+    let lastId = 0
+
     // Function to get a random pokemon Id 
     async function randomPokemon() {
-        const randomId = Math.floor(Math.random() * 1025) + 1
-        await getPokemon(randomId)
-
-    }
+    let randomId: number
+    do {
+        randomId = Math.floor(Math.random() * 1025) + 1
+    } while (randomId === lastId)
+    lastId = randomId
+    await getPokemon(randomId)
+}
 
     // Returning the ref variables and functions to be used in the component
     return { pokemon, loading, error, randomPokemon }
