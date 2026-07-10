@@ -28,7 +28,12 @@
         <BaseCard>
             <h1 class="text-3xl font-bold mb-6">Formulario para entrenadores</h1>
 
-            <TrainerForm :pokemon-name="pokemon.name" @save="saveTrainer" />
+            <TrainerForm @save="saveTrainer" />
+        </BaseCard>
+
+        <BaseCard>
+            <h1 class="text-3xl font-bold mb-6">Lista de entrenadores</h1>
+            <TrainerList />
         </BaseCard>
     </div>
 </template>
@@ -41,12 +46,15 @@ import { onMounted } from 'vue'
 import TrainerForm from './components/TrainerForm.vue';
 import PokemonCard from './components/PokemonCard.vue';
 import RandomButton from './components/RandomButton.vue';
+import TrainerList from './components/TrainerList.vue';
 
 // Importing Pokemon composable
 import { usePokemon } from './composables/usePokemon';
 
-import type { Trainer } from './interfaces/trainer'
+import type { CreateTrainer } from './interfaces/trainer'
 import BaseCard from './components/BaseCard.vue';
+
+import { useTrainerStore } from './stores/trainerStore';
 
 // Using the usePokemon composable to manage state and logic related to Pokemon
 const {
@@ -56,9 +64,12 @@ const {
     randomPokemon
 } = usePokemon()
 
-function saveTrainer(trainer: Trainer) {
-    console.log('Entrenador guardado:', trainer);
+const trainerStore = useTrainerStore()
+
+function saveTrainer(trainer: CreateTrainer) {
+    trainerStore.createTrainer(trainer)
 }
+
 
 // When the component is mounted, it will execute randomPokemon()
 onMounted(() => {

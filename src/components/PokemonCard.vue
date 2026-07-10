@@ -3,7 +3,7 @@
     <div class="flex flex-col items-center space-y-4 bg-white rounded-xl shadow-md p-6 w-full">
         <!-- Pokemon image -->
         <div class="rounded-2xl p-4">
-            <img v-if="image" :src="image" :alt="name" class="w-56 h-56" />
+            <img v-if="image" :key="image" :src="image" :alt="name" class="w-56 h-56" />
             <div v-else class="w-56 h-56 flex items-center justify-center bg-stone-200 rounded-2xl text-stone-400">
                 Sin imagen
             </div>

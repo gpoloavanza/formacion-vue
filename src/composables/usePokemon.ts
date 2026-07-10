@@ -24,6 +24,15 @@ export function usePokemon() {
         baseURL: API_URL,
     })
 
+    async function preloadImage(url: string): Promise<void> {
+        return new Promise((resolve) => {
+            const img = new Image()
+            img.onload = () => resolve()
+            img.onerror = () => resolve()
+            img.src = url
+        })
+    }
+
     // Axios function for getPokemon()
     async function getPokemon(id: number) {
         // Resetting error and loading to true
@@ -31,28 +40,31 @@ export function usePokemon() {
         loading.value = true
 
         try {
-
             // axios API call through the PokemonResponse interface and the API_URL + id
             const { data } = await api.get<PokemonResponse>(`/${id}`)
 
+            const imageUrl = data.sprites.front_default
+                ?? data.sprites.other?.['official-artwork']?.front_default
+                ?? ''
+
+            if (imageUrl) {
+                await preloadImage(imageUrl)
+            }
+
             // Taking the image and name from the response and saving it into the pokemon reactive variable
-            pokemon.value.image = data.sprites.front_default
-            ?? data.sprites.other?.['official-artwork']?.front_default
-            ?? ''
-            pokemon.value.name = data.name
-
-            // Mapping the types from the response and saving it into the pokemon reactive variable
-            pokemon.value.types = data.types.map(
-                pokemonType => pokemonType.type.name)
-
-            // Catching errors to show a user error and a developer console error
+            pokemon.value = {
+                image: imageUrl,
+                name: data.name,
+                types: data.types.map(t => t.type.name)
+            }
+            
+            // Catching errors to show a user error
         } catch (err) {
             // If there is an error, it will be saved into the error reactive variable
             error.value = 'Error cargando el Pokémon. Inténtelo de nuevo más tarde.'
 
             // Turning off the loading state
         } finally {
-            await new Promise<void>(resolve => setTimeout(resolve, 500))
             loading.value = false
         }
     }

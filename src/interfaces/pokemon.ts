@@ -18,3 +18,14 @@ export interface PokemonResponse {
     sprites: PokemonSprites
     types: PokemonType[]
 }
+
+export interface Pokemon {
+    name: string
+    image: string
+    types: string[] // Strings array
+}
+
+export interface AssignedPokemon {
+    name: string
+    image: string
+}
