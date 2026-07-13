@@ -3,10 +3,16 @@
         <BaseCard>
             <h1 class="text-3xl font-bold mb-6">Selecciona tu Pokemon</h1>
 
-            <div v-if="loading" class="flex h-99 items-center justify-center">
-                <span class="h-8 w-8 animate-spin rounded-full border-4 border-stone-300 border-t-purple-600"></span>
+            <div class="relative">
+                <PokemonCard :image="pokemon.image" :name="pokemon.name" :types="pokemon.types" />
+
+                <div v-if="loading"
+                    class="absolute inset-0 flex items-center justify-center rounded-xl bg-white/50 backdrop-blur-sm">
+                    <span
+                        class="h-8 w-8 animate-spin rounded-full border-4 border-stone-300 border-t-purple-600"></span>
+                </div>
             </div>
-            <PokemonCard v-else :image="pokemon.image" :name="pokemon.name" :types="pokemon.types" />
+
 
 
             <!-- v-on directive calling @random from RandomButton.vue -->
@@ -22,7 +28,12 @@
         <BaseCard>
             <h1 class="text-3xl font-bold mb-6">Formulario para entrenadores</h1>
 
-            <TrainerForm :pokemon-name="pokemon.name" @save="saveTrainer" />
+            <TrainerForm @save="saveTrainer" />
+        </BaseCard>
+
+        <BaseCard>
+            <h1 class="text-3xl font-bold mb-6">Lista de entrenadores</h1>
+            <TrainerList />
         </BaseCard>
     </div>
 </template>
@@ -35,12 +46,15 @@ import { onMounted } from 'vue'
 import TrainerForm from './components/TrainerForm.vue';
 import PokemonCard from './components/PokemonCard.vue';
 import RandomButton from './components/RandomButton.vue';
+import TrainerList from './components/TrainerList.vue';
 
 // Importing Pokemon composable
 import { usePokemon } from './composables/usePokemon';
 
-import type { Trainer } from './interfaces/trainer'
+import type { CreateTrainer } from './interfaces/trainer'
 import BaseCard from './components/BaseCard.vue';
+
+import { useTrainerStore } from './stores/trainerStore';
 
 // Using the usePokemon composable to manage state and logic related to Pokemon
 const {
@@ -50,9 +64,12 @@ const {
     randomPokemon
 } = usePokemon()
 
-function saveTrainer(trainer: Trainer) {
-    console.log('Entrenador guardado:', trainer);
+const trainerStore = useTrainerStore()
+
+function saveTrainer(trainer: CreateTrainer) {
+    trainerStore.createTrainer(trainer)
 }
+
 
 // When the component is mounted, it will execute randomPokemon()
 onMounted(() => {

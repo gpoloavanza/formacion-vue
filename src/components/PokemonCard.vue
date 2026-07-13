@@ -3,7 +3,10 @@
     <div class="flex flex-col items-center space-y-4 bg-white rounded-xl shadow-md p-6 w-full">
         <!-- Pokemon image -->
         <div class="rounded-2xl p-4">
-            <img :src="image" :alt="name" class="w-56 h-56" />
+            <img v-if="image" :key="image" :src="image" :alt="name" class="w-56 h-56" />
+            <div v-else class="w-56 h-56 flex items-center justify-center bg-stone-200 rounded-2xl text-stone-400">
+                Sin imagen
+            </div>
         </div>
 
         <div class="flex flex-col items-center space-y-3 w-full">
@@ -45,9 +48,9 @@ const formattedTypes = computed(() =>
         label: type.charAt(0).toUpperCase() + type.slice(1),
         class: getTypeClass(type)
     }))
-) 
+)
 
-const formattedName = computed(() => 
+const formattedName = computed(() =>
     props.name.charAt(0).toUpperCase() + props.name.slice(1))
 </script>
 

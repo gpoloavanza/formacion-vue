@@ -8,11 +8,9 @@
 
         <BaseInput id="email" label="Email" placeholder="ash@trainer.com" v-model="trainer.email" required />
 
-        <BaseDisplayField id="assigned-pokemon" label="Pokemon asignado" :value="pokemonName" />
-
         <div class="pt-3">
             <BaseButton type="submit">
-                Guardar entrenador
+                Crear entrenador
             </BaseButton>
         </div>
 
@@ -21,18 +19,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Trainer } from '../interfaces/trainer'
+import type { CreateTrainer } from '../interfaces/trainer'
 
 import { ref } from 'vue'
 import BaseInput from './BaseInput.vue';
-import BaseDisplayField from './BaseDisplayField.vue';
 import BaseButton from './BaseButton.vue';
 
-const props = defineProps<{
-    pokemonName: string
-}>()
-
-const initialTrainer: Omit<Trainer, 'assignedPokemon'> = {
+const initialTrainer: CreateTrainer = {
     name: '',
     surname: '',
     dni: '',
@@ -42,7 +35,7 @@ const initialTrainer: Omit<Trainer, 'assignedPokemon'> = {
 const trainer = ref({ ...initialTrainer })
 
 const emit = defineEmits<{
-    (e: 'save', trainer: Trainer): void
+    (e: 'save', trainer: CreateTrainer): void
 }>()
 
 function saveTrainer() {
@@ -55,12 +48,7 @@ function saveTrainer() {
         return
     }
 
-    const completeTrainer = {
-        ...trainer.value,
-        assignedPokemon: props.pokemonName
-    }
-
-    emit('save', completeTrainer)
+    emit('save', trainer.value)
 
     trainer.value = {
         ...initialTrainer
