@@ -9,17 +9,15 @@
             </p>
 
             <div class="flex justify-end gap-3">
-                <BaseButton @click="emit('confirm')" variant="secondary">
-                    Eliminar
+                <BaseButton @click="emit('cancel')" variant="secondary">
+                    {{ cancelText }}
                 </BaseButton>
-                
-                <BaseButton @click="emit('cancel')" variant="danger">
-                    Cancelar
+
+                <BaseButton @click="emit('confirm')" variant="danger">
+                    {{ confirmText }}
                 </BaseButton>
             </div>
-
         </div>
-
     </div>
 </template>
 
@@ -30,6 +28,8 @@ defineProps<{
     visible: boolean
     title: string
     message: string
+    confirmText: string
+    cancelText: string
 }>()
 
 const emit = defineEmits<{

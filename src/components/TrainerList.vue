@@ -5,8 +5,9 @@
     </div>
 
     <ConfirmModal :visible="trainerToDelete !== null" title="Eliminar entrenador"
-        message="¿Estás seguro de que quieres eliminar este entrenador?" @confirm="confirmDelete"
-        @cancel="cancelDelete" />
+        message="¿Estás seguro de que quieres eliminar este entrenador?" @confirm="confirmDelete" @cancel="cancelDelete"
+        confirm-text="Eliminar" cancel-text="Cancelar" />
+
 
 </template>
 

@@ -1,8 +1,5 @@
 import { ref } from "vue";
-// Importing axios function for API calls
-import axios from 'axios';
-import type { PokemonResponse } from '../interfaces/pokemon'
-
+import { fetchPokemon } from "@/services/pokemonService";
 
 export function usePokemon() {
     // Pokemon reactive variable to save image, name and types into PokemonCard
@@ -15,14 +12,6 @@ export function usePokemon() {
     // Reactive variables for loading and error states
     const loading = ref(false)
     const error = ref('')
-
-    // Importing API_URL from .env
-    const API_URL = import.meta.env.VITE_API_URL
-
-    // axios create
-    const api = axios.create({
-        baseURL: API_URL,
-    })
 
     async function preloadImage(url: string): Promise<void> {
         return new Promise((resolve) => {
@@ -41,7 +30,7 @@ export function usePokemon() {
 
         try {
             // axios API call through the PokemonResponse interface and the API_URL + id
-            const { data } = await api.get<PokemonResponse>(`/${id}`)
+            const data = await fetchPokemon(id)
 
             const imageUrl = data.sprites.front_default
                 ?? data.sprites.other?.['official-artwork']?.front_default
