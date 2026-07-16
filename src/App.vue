@@ -35,26 +35,36 @@
             <h1 class="text-3xl font-bold mb-6">Lista de entrenadores</h1>
             <TrainerList />
         </BaseCard>
+
+        <BaseToast 
+            :visible="toast.visible"
+            :message="toast.message"
+            :type="toast.type"
+            @close="closeToast"
+        />
     </div>
 </template>
 
 <script setup lang="ts">
 // Importing ref for reactive variables and onMounted
-import { onMounted } from 'vue'
+import { onMounted, reactive } from 'vue'
 
 // Importing components
-import TrainerForm from './components/TrainerForm.vue';
-import PokemonCard from './components/PokemonCard.vue';
-import RandomButton from './components/RandomButton.vue';
-import TrainerList from './components/TrainerList.vue';
+import TrainerForm from '@/components/TrainerForm.vue'
+import PokemonCard from '@/components/PokemonCard.vue'
+import RandomButton from '@/components/RandomButton.vue'
+import TrainerList from '@/components/TrainerList.vue'
+import BaseToast from '@/components/BaseToast.vue'
+import BaseCard from '@/components/BaseCard.vue'
 
 // Importing Pokemon composable
-import { usePokemon } from './composables/usePokemon';
+import { usePokemon } from './composables/usePokemon'
 
 import type { CreateTrainer } from './interfaces/trainer'
-import BaseCard from './components/BaseCard.vue';
+import type { ToastState } from '@/interfaces/toast'
 
-import { useTrainerStore } from './stores/trainerStore';
+import { useTrainerStore } from '@/stores/trainerStore'
+
 
 // Using the usePokemon composable to manage state and logic related to Pokemon
 const {
@@ -66,10 +76,31 @@ const {
 
 const trainerStore = useTrainerStore()
 
+const toast = reactive<ToastState>({
+    visible: false,
+    message: '',
+    type: 'success'
+})
+
 function saveTrainer(trainer: CreateTrainer) {
     trainerStore.createTrainer(trainer)
+    
+    showToast(
+        'Entrenador creado correctamente',
+        'success'
+    )
 }
 
+function showToast(message: string, type: ToastState['type']) {
+    toast.visible = true
+    toast.message = message
+    toast.type = type
+    
+}
+
+function closeToast() {
+    toast.visible = false
+}
 
 // When the component is mounted, it will execute randomPokemon()
 onMounted(() => {
